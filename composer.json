@@ -15,8 +15,8 @@
     }
   ],
   "require": {
-    "drupal/migrate_conditions": "1.x@beta",
-    "drupal/migrate_plus": "^5",
+    "drupal/migrate_conditions": "2.2",
+    "drupal/migrate_plus": "^6",
     "jonathangreen/tuque": "dev-master"
   },
   "require-dev": {
