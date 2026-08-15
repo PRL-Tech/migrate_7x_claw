@@ -204,7 +204,7 @@ class Islandora extends SourcePluginExtension {
       if ($this->processing == self::DATASTREAM_TYPE) {
         // Doing datastreams, so we need to count per object.
         $query = $this->getQuery(0, 0);
-        $result = $this->getDataFetcherPlugin()->getResponseContent($query)->getContents();
+        $result = $this->getDataFetcherPlugin()->getResponseContent($query);
         $body = json_decode($result, TRUE);
         $count = intval($body['response']['numFound']);
         $batch_size = 10000;
@@ -214,7 +214,7 @@ class Islandora extends SourcePluginExtension {
           // Now that we know how many objects, loop and count datastreams.
           $start = ($batch_size * $x);
           $query = $this->getQuery($start, $batch_size, [$this->datastreamSolrField]);
-          $result = $this->getDataFetcherPlugin()->getResponseContent($query)->getContents();
+          $result = $this->getDataFetcherPlugin()->getResponseContent($query);
           $body = json_decode($result, TRUE);
           foreach ($body['response']['docs'] as $object) {
             // Don't include AUDIT as you don't see if via Tuque/Fedora API-A.
@@ -226,7 +226,7 @@ class Islandora extends SourcePluginExtension {
       else {
         // Just do a regular object count.
         $query = $this->getQuery(0, 0);
-        $result = $this->getDataFetcherPlugin()->getResponseContent($query)->getContents();
+        $result = $this->getDataFetcherPlugin()->getResponseContent($query);
         $body = json_decode($result, TRUE);
         $this->count = $body['response']['numFound'];
       }
@@ -300,7 +300,7 @@ class Islandora extends SourcePluginExtension {
    */
   private function getPids($start = 0) {
     $query = $this->getQuery($start, $this->batchSize);
-    $result = $this->getDataFetcherPlugin()->getResponseContent($query)->getContents();
+    $result = $this->getDataFetcherPlugin()->getResponseContent($query);
     $pids = [];
     $body = json_decode($result, TRUE);
     foreach ($body['response']['docs'] as $o) {
