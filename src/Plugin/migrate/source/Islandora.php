@@ -5,7 +5,7 @@ namespace Drupal\migrate_7x_claw\Plugin\migrate\source;
 use Drupal\migrate\MigrateException;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate_plus\Plugin\migrate\source\SourcePluginExtension;
-use function GuzzleHttp\Psr7\build_query;
+//use function GuzzleHttp\Psr7\build_query;
 
 /**
  * Source plugin for Islandora content.
@@ -330,7 +330,7 @@ class Islandora extends SourcePluginExtension {
     $params['q'] = $this->q;
     $params['wt'] = 'json';
     $params['sort'] = 'PID+desc';
-    return $this->solrBase . "/select?" . build_query($params, FALSE);
+    return $this->solrBase . "/select?" . http_query_build($params. '', '&', PHP_QUERY_RFC3986);//build_query($params, FALSE);
   }
 
 }
