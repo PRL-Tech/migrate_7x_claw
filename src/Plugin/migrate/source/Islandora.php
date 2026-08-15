@@ -329,7 +329,7 @@ class Islandora extends SourcePluginExtension {
     $params['fl'] = 'PID' . (count($additionalFields) > 0 ? "," . implode(",", $additionalFields) : "");
     $params['q'] = $this->q;
     $params['wt'] = 'json';
-    $params['sort'] = 'PID+desc';
+    $params['sort'] = 'PID desc';//removed the +, it was causing errors
     return $this->solrBase . "/select?" . http_query_build($params. '', '&', PHP_QUERY_RFC3986);//build_query($params, FALSE);
   }
 
