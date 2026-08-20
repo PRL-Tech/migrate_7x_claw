@@ -182,7 +182,7 @@ class Islandora extends SourcePluginExtension {
     $pids = $this->getPids($start);
     $current_batch = array_map(function ($i) {
       if ($this->row_type == 'solr') {
-        return "{$this->solrBase}/select?q=PID%3A\"" . urlencode($i) . "\"&wt=json";
+        return $this->solrBase . '/select?' . http_build_query([ 'q'=>'PID:"' . $i . '"', 'wt'=>'json', ], '', '&', PHP_QUERY_RFC3986);
       }
       else if ($this->row_type != 'foxml') {
         return "{$this->fedoraBase}/objects/{$i}/datastreams/{$this->row_type}/content";
