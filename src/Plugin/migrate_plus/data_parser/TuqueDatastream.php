@@ -82,8 +82,8 @@ class TuqueDatastream extends DataParserPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition);
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, \Drupal\migrate_plus\DataFetcherPluginManager $fetcher_plugin_manager) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition, $fetcher_plugin_manager);
 
     if (!isset($configuration['fedora_base_url'])) {
       throw new MigrateException("TuqueDatastream data fetcher plugin requires a \"fedora_base_url\" be defined.");
