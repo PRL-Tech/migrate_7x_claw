@@ -135,6 +135,14 @@ source:
       name: city_section
       label: 'City Section'
       selector: mods_subject_hierarchicalGeographic_citySection_ms
+    -
+      name: page_of
+      label: 'Is Page Of'
+      selector: RELS_EXT_isPageOf_uri_ms
+    -
+      name: page_number
+      label: 'Page Number'
+      selector: RELS_EXT_isPageNumber_literal_s
   ids:
     PID:
       type: string
@@ -177,6 +185,13 @@ process:
       source: part_of
     -
       plugin: log
+  _field_tmp_member_of_src3:
+    -
+      plugin: skip_on_empty
+      method: process
+      source: page_of
+    -
+      plugin: log
   _field_tmp_member_of:
     -
       plugin: skip_on_empty
@@ -184,6 +199,7 @@ process:
       source:
         - '@_field_tmp_member_of_src1'
         - '@_field_tmp_member_of_src2'
+        - '@_field_tmp_member_of_src3'
     -
       plugin: flatten
     -
@@ -206,6 +222,10 @@ process:
       plugin: migration_lookup
       migration: islandora_objects
       no_stub: false
+  field_weight:
+    plugin: skip_on_empty
+    method: process
+    source: page_number
   field_model:
     -
       plugin: skip_on_empty
@@ -218,6 +238,9 @@ process:
         'info:fedora/islandora:sp_basic_image': 'http://purl.org/coar/resource_type/c_c513'
         'info:fedora/islandora:sp-audioCModel': 'http://purl.org/coar/resource_type/c_18cc'
         'info:fedora/islandora:sp_videoCModel': 'http://purl.org/coar/resource_type/c_12ce'
+        'info:fedora/islandora:newspaperCModel': 'https://schema.org/Newspaper'
+        'info:fedora/islandora:newspaperIssueCModel': 'https://schema.org/Book'
+        'info:fedora/islandora:newspaperPageCModel': 'http://id.loc.gov/ontologies/bibframe/part'
       default_value: 'http://purl.org/coar/resource_type/c_1843'
     -
       plugin: entity_lookup
