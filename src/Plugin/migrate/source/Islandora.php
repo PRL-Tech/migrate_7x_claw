@@ -178,21 +178,42 @@ class Islandora extends SourcePluginExtension {
     if (is_null($this->batchCounter)) {
       $this->batchCounter = 0;
     }
-    $start = $this->batchCounter * $this->batchSize;
-    $pids = $this->getPids($start);
-    $current_batch = array_map(function ($i) {
-      if ($this->row_type == 'solr') {
-        return $this->solrBase . '/select?' . http_build_query([ 'q'=>'PID:"' . $i . '"', 'wt'=>'json', ], '', '&', PHP_QUERY_RFC3986);
+    // Drupal core's SourcePluginBase::rewind()/next() only call
+    // fetchNextRow() (and therefore fetchNextBatch(), below) from inside a
+    // loop gated on the iterator already being valid. If the very first
+    // batch of PIDs happens to produce zero matched rows -- e.g. an
+    // item_selector like subject/person/corporate/geographic looking for a
+    // specific XML element that none of that batch's PIDs happen to have --
+    // the iterator is immediately considered exhausted and the migration
+    // silently stops, even though later batches have real matches. Loop
+    // through batches here, internally, until one actually has data (or
+    // PIDs genuinely run out), so callers never observe a spuriously-empty
+    // valid batch.
+    do {
+      $start = $this->batchCounter * $this->batchSize;
+      $pids = $this->getPids($start);
+      if (empty($pids)) {
+        break;
       }
-      else if ($this->row_type != 'foxml') {
-        return "{$this->fedoraBase}/objects/{$i}/datastreams/{$this->row_type}/content";
+      $current_batch = array_map(function ($i) {
+        if ($this->row_type == 'solr') {
+          return $this->solrBase . '/select?' . http_build_query([ 'q'=>'PID:"' . $i . '"', 'wt'=>'json', ], '', '&', PHP_QUERY_RFC3986);
+        }
+        else if ($this->row_type != 'foxml') {
+          return "{$this->fedoraBase}/objects/{$i}/datastreams/{$this->row_type}/content";
+        }
+        else {
+          return "{$this->fedoraBase}/objects/{$i}/objectXML";
+        }
+      }, $pids);
+      $this->configuration['urls'] = $current_batch;
+      $this->getDataParserPlugin()->updateUrls($current_batch);
+      $this->getDataParserPlugin()->rewind();
+      if ($this->getDataParserPlugin()->valid()) {
+        return $this->getDataParserPlugin();
       }
-      else {
-        return "{$this->fedoraBase}/objects/{$i}/objectXML";
-      }
-    }, $pids);
-    $this->configuration['urls'] = $current_batch;
-    $this->getDataParserPlugin()->updateUrls($current_batch);
+      $this->batchCounter++;
+    } while (TRUE);
     return $this->getDataParserPlugin();
   }
 
