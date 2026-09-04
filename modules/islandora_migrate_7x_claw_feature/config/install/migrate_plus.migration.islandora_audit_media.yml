@@ -15,14 +15,14 @@ migration_group: islandora_7x
 label: 'AUDIT Media'
 source:
   plugin: islandora
-  solr_base_url: 'http://10.0.2.2:8080/solr'
-  q: 'RELS_EXT_isMemberOfCollection_uri_ms:"info:fedora/islandora:sp_basic_image_collection" OR PID:"islandora:sp_basic_image_collection"'
-  fedora_base_url: 'http://10.0.2.2:8080/fedora'
+  solr_base_url: 'http://192.168.0.248:8082/solr'
+  q: 'PID:"prdn:10002" OR RELS_EXT_isPageOf_uri_ms:"info:fedora/prdn:10002"'
+  fedora_base_url: 'http://192.168.0.248:8081/fedora'
   data_fetcher_plugin: http
   authentication:
     plugin: basic
     username: fedoraAdmin
-    password: fedoraAdmin
+    password: CHANGEME-set-via-migrate_7x_claw-admin-form
   content_model_field: RELS_EXT_hasModel_uri_ms
   content_model: 'islandora:sp_basic_image'
   data_parser_plugin: authenticated_xml
@@ -32,7 +32,7 @@ source:
     mimetype: application/xml
     extension: xml
     dsid: AUDIT
-    fedora_base_url: 'http://10.0.2.2:8080/fedora'
+    fedora_base_url: 'http://192.168.0.248:8081/fedora'
     creator_uid: 1
     audit_url: http://islandora.ca/audit-trail
   fields:

@@ -17,15 +17,15 @@ migration_group: islandora_7x
 label: 'Islandora Objects'
 source:
   plugin: islandora
-  solr_base_url: 'http://10.0.2.2:8080/solr'
-  q: 'RELS_EXT_isMemberOfCollection_uri_ms:"info:fedora/islandora:sp_basic_image_collection" OR PID:"islandora:sp_basic_image_collection"'
+  solr_base_url: 'http://192.168.0.248:8082/solr'
+  q: 'PID:"prdn:10002" OR RELS_EXT_isPageOf_uri_ms:"info:fedora/prdn:10002"'
   row_type: solr
-  fedora_base_url: 'http://10.0.2.2:8080/fedora'
+  fedora_base_url: 'http://192.168.0.248:8081/fedora'
   data_fetcher_plugin: http
   authentication:
     plugin: basic
     username: fedoraAdmin
-    password: islandora
+    password: CHANGEME-set-via-migrate_7x_claw-admin-form
   data_parser_plugin: json_list
   item_selector: /response/docs
   constants:
